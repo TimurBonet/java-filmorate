@@ -31,23 +31,23 @@ public class FilmController {
     public Film createFilm(@Valid @RequestBody Film film) throws InvalidFilmDataException, FilmAlreadyExistException {
         log.info("Попытка добавить объект {}", film);
 
-        if(film.getName().isBlank()
-                || film.getDescription().length() > 200){
+        if (film.getName().isBlank()
+                || film.getDescription().length() > 200) {
             throw new InvalidFilmDataException();
         }
 
-        if (film.getReleaseDate().isBefore(LocalDate.parse("1895-12-28"))){
+        if (film.getReleaseDate().isBefore(LocalDate.parse("1895-12-28"))) {
             throw new InvalidFilmDataException();
         }
 
-        if (film.getDuration()<0){
+        if (film.getDuration() < 0) {
             throw new InvalidFilmDataException();
         }
 
         if (!films.containsValue(film)) {
             if (film != null
                     || !film.getReleaseDate().isBefore(LocalDate.parse("1895-12-28"))
-                    || film.getDuration()>0) {
+                    || film.getDuration() > 0) {
                 film.setId(addId());
                 films.put(film.getId(), film);
             } else throw new InvalidFilmDataException();
