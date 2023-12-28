@@ -18,14 +18,13 @@ import java.time.LocalDate;
 @ToString(callSuper = true)
 public class Film {
     @Min(1)
-    private int id;
+    int id;
     @NotBlank
-    private String name;
+    String name;
     @Size(min = 0, max = 200)
-    private String description;
-    private LocalDate releaseDate;
+    String description;
+    LocalDate releaseDate;
     @Min(1)
-    private long duration;
-
+    Duration duration;
 
 }
