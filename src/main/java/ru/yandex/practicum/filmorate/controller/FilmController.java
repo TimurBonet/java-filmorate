@@ -13,7 +13,7 @@ import java.util.*;
 public class FilmController {
     @lombok.Generated
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FilmController.class);
-    //private static final List<Film> films = new ArrayList<>();
+
     private Map<Integer, Film> films = new HashMap<>();
     private int userId = 0;
 
