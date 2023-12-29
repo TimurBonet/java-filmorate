@@ -17,7 +17,9 @@ public class FilmController {
     private Map<Integer, Film> films = new HashMap<>();
     private int userId = 0;
 
-    public int addId() {
+    private static final int DESCRIPTION_MAX_LENGTH = 200;
+
+    private int addId() {
         return ++userId;
     }
 
@@ -31,8 +33,17 @@ public class FilmController {
     public Film createFilm(@Valid @RequestBody Film film) throws InvalidFilmDataException, FilmAlreadyExistException {
         log.info("Попытка добавить объект {}", film);
 
+        if (isCorrectForCreate(film)) {
+            film.setId(addId());
+            films.put(film.getId(), film);
+        }
+
+        return film;
+    }
+
+    private boolean isCorrectForCreate(Film film) {
         if (film.getName().isBlank()
-                || film.getDescription().length() > 200) {
+                || film.getDescription().length() > DESCRIPTION_MAX_LENGTH) {
             throw new InvalidFilmDataException();
         }
 
@@ -44,25 +55,38 @@ public class FilmController {
             throw new InvalidFilmDataException();
         }
 
-        if (!films.containsValue(film)) {
-            if (film != null
-                    || !film.getReleaseDate().isBefore(LocalDate.parse("1895-12-28"))
-                    || film.getDuration() > 0) {
-                film.setId(addId());
-                films.put(film.getId(), film);
-            } else throw new InvalidFilmDataException();
-        } else throw new FilmAlreadyExistException();
-        return film;
+        if (films.containsValue(film)) {
+            throw new FilmAlreadyExistException();
+        }
+
+        if (film == null
+                || film.getReleaseDate().isBefore(LocalDate.parse("1895-12-28"))
+                || film.getDuration() <= 0) {
+            throw new InvalidFilmDataException();
+        }
+
+        return true;
     }
 
     @PutMapping("/films")
     public Film updateFilm(@Valid @RequestBody Film film) throws InvalidFilmDataException {
         log.info("Попытка обновить объект {}", film);
-        if (films.containsKey(film.getId())) {
-            if (film != null || film.getReleaseDate().isBefore(LocalDate.parse("1895-12-28"))) {
-                films.put(film.getId(), film);
-            }
-        } else throw new InvalidFilmDataException();
+
+        if (isCorrectForUpdate(film)) {
+            films.put(film.getId(), film);
+        }
+
         return film;
     }
+
+    private boolean isCorrectForUpdate(Film film) {
+        if (films.containsKey(film.getId())) {
+            if (film != null || !film.getReleaseDate().isBefore(LocalDate.parse("1895-12-28"))) {
+                return true;
+            }
+        } else throw new InvalidFilmDataException();
+
+        return false;
+    }
+
 }

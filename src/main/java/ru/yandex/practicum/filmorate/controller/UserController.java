@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.InvalidEmailException;
 import ru.yandex.practicum.filmorate.exceptions.UnknownUserUpdateException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
@@ -36,10 +37,8 @@ public class UserController {
     @PostMapping("/users")
     public User createUser(@Valid @RequestBody User user) throws InvalidEmailException {
         log.info("Попытка добавить объект {}", user);
-        if (user.getEmail().contains("@") && !user.getEmail().contains(" ") && !user.getBirthday().isAfter(LocalDate.now())) {
-            if (user.getName() == null) {
-                user.setName(user.getLogin());
-            }
+
+        if (isCorrectForCreate(user)) {
             user.setId(addId());
             users.put(user.getId(), user);
         } else {
@@ -48,21 +47,42 @@ public class UserController {
         return user;
     }
 
+    private boolean isCorrectForCreate(User user) {
+        if (user.getEmail().contains("@")
+                && !user.getEmail().contains(" ")
+                && !user.getBirthday().isAfter(LocalDate.now())) {
+            if (user.getName() == null) {
+                user.setName(user.getLogin());
+            }
+            return true;
+        }
+        return false;
+    }
+
     @PutMapping("/users")
     public User updateUser(@Valid @RequestBody User user) throws InvalidEmailException, UnknownUserUpdateException {
         log.info("Попытка обновить объект {}", user);
+
+        if (isCorrectForUpdate(user)) {
+            users.put(user.getId(), user);
+        }
+        return user;
+    }
+
+    private boolean isCorrectForUpdate(User user) {
+
         if (user.getName().isEmpty() || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
+
         if (user.getEmail().contains("@") && !user.getEmail().contains(" ") && !user.getBirthday().isAfter(LocalDate.now())) {
             if (!users.containsKey(user.getId())) {
                 throw new UnknownUserUpdateException();
             } else {
-                users.put(user.getId(), user);
+                return true;
             }
         } else {
             throw new InvalidEmailException();
         }
-        return user;
     }
 }

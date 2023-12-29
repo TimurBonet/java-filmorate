@@ -1,6 +1,9 @@
 package ru.yandex.practicum.filmorate.exceptions;
 
-public class InvalidFilmDataException extends Exception {
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class InvalidFilmDataException extends RuntimeException {
 
     public InvalidFilmDataException() {
         System.out.println("Некорректные данные фильма! \nПроверьте соответствие критериям: " +

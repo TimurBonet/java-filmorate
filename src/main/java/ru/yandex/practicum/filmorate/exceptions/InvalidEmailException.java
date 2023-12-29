@@ -1,6 +1,9 @@
 package ru.yandex.practicum.filmorate.exceptions;
 
-public class InvalidEmailException extends Exception {
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class InvalidEmailException extends RuntimeException {
 
     public InvalidEmailException() {
         System.out.println("Отсутствует или неверно задан email! \nПроверьте по критериям: \n" +

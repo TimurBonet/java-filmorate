@@ -4,10 +4,12 @@ import lombok.Data;
 import lombok.NonNull;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
 
 @Data
 public class User {
+    @Min(1)
     private int id;
     @NonNull
     @Email
