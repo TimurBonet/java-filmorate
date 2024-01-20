@@ -35,7 +35,7 @@ public class FilmController {
     }
 
     @GetMapping("/films/popular")
-    public List<Film> showTopTenFilms (@RequestParam (value = "count", defaultValue = "10", required = false) Integer count) {
+    public List<Film> showTopTenFilms(@RequestParam(value = "count", defaultValue = "10", required = false) Integer count) {
 
         return filmService.showTopTenFilms(count);
     }
@@ -47,15 +47,15 @@ public class FilmController {
     }
 
     @PutMapping("/films/{id}/like/{userId}")
-    public Film addLike (@PathVariable("id") Integer id, @PathVariable("userId") Integer userId) {
+    public Film addLike(@PathVariable("id") Integer id, @PathVariable("userId") Integer userId) {
 
-        return filmService.addLike(id,userId);
+        return filmService.addLike(id, userId);
     }
 
     @DeleteMapping("/films/{id}/like/{userId}")
-    public Film removeLike (@PathVariable("id") Integer id, @PathVariable("userId") Integer userId) {
+    public Film removeLike(@PathVariable("id") Integer id, @PathVariable("userId") Integer userId) {
 
-        return filmService.removeLike(id,userId);
+        return filmService.removeLike(id, userId);
     }
 
     @PutMapping("/films")
