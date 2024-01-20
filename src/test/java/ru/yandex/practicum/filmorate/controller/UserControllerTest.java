@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserControllerTest {
     private InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
     private UserService userService = new UserService(inMemoryUserStorage);
-    private UserController userController = new UserController(inMemoryUserStorage,userService ); //заглушка с конструктором хранилища
+    private UserController userController = new UserController(inMemoryUserStorage, userService); //заглушка с конструктором хранилища
     List<User> usersList = new ArrayList<>();
 
 
@@ -76,7 +76,7 @@ class UserControllerTest {
         userController.createUser(user);*/
         User user = userController.createUser(usersList.get(1));
         assertEquals(user, userController.findAll().get(0), "Пользователь не совпадает");
-        assertEquals(user.getId(),userController.findAll().get(0).getId(), "Не совпадает id" );
+        assertEquals(user.getId(), userController.findAll().get(0).getId(), "Не совпадает id");
         assertEquals("NoName", userController.findAll().get(0).getName(), "Присвоенное имя не совпадает");
     }
 
@@ -110,10 +110,10 @@ class UserControllerTest {
         userController.createUser(user1);
         Integer id1 = user.getId();
         Integer id2 = user1.getId();
-        userController.addFriend(id1,id2);
-        assertEquals(1,user.getFriends().size(), "Количество добавленных друзей исходного пользователя не совпадает");
-        assertEquals(1,user1.getFriends().size(), "Количество добавленных друзей добавленного пользователя не совпадает");
-       // assertEquals(user1.getId(), user.getFriends().get(0), "Внесённый в друзья пользователь не совпадает");
+        userController.addFriend(id1, id2);
+        assertEquals(1, user.getFriends().size(), "Количество добавленных друзей исходного пользователя не совпадает");
+        assertEquals(1, user1.getFriends().size(), "Количество добавленных друзей добавленного пользователя не совпадает");
+        // assertEquals(user1.getId(), user.getFriends().get(0), "Внесённый в друзья пользователь не совпадает");
         //assertEquals(user.getId(), userController.showCommonFriendList(id2).get(0).getId(), "Внесённый в друзья пользователь не совпадает");
     }
 
@@ -126,8 +126,8 @@ class UserControllerTest {
         Integer id1 = user.getId();
         Integer id2 = user1.getId();
         user.getFriends().add(id2);
-        userController.deleteFriend(id1,id2);
-        assertEquals(0,user.getFriends().size(), "Удаление не произошло");
+        userController.deleteFriend(id1, id2);
+        assertEquals(0, user.getFriends().size(), "Удаление не произошло");
     }
 
     @Test
@@ -141,10 +141,10 @@ class UserControllerTest {
         Integer id1 = user.getId();
         Integer id2 = user1.getId();
         Integer id3 = user2.getId();
-        userController.addFriend(id1,id2);
-        userController.addFriend(id1,id3);
-        userController.addFriend(id2,id3);
+        userController.addFriend(id1, id2);
+        userController.addFriend(id1, id3);
+        userController.addFriend(id2, id3);
         User expected = user2;
-        assertEquals(expected,userController.showCommonFriendList(id1,id2).get(0), "Списки друзей не совпадают");
+        assertEquals(expected, userController.showCommonFriendList(id1, id2).get(0), "Списки друзей не совпадают");
     }
 }

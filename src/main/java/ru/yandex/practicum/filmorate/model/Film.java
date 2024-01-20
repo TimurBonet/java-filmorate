@@ -31,15 +31,15 @@ public class Film {
     private long duration;
     private Set<Integer> likesList = new HashSet<>();
 
-    public void addLikeFromUser (Integer id) {
+    public void addLikeFromUser(Integer id) {
         likesList.add(id);
     }
 
-    public void removeLikeFromUser (Integer id) {
+    public void removeLikeFromUser(Integer id) {
         likesList.remove(id);
     }
 
-    public void setTestValue (List<Integer> nums){
+    public void setTestValue(List<Integer> nums) {
         likesList.addAll(nums);
     }
 

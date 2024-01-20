@@ -24,7 +24,7 @@ public class User {
     private LocalDate birthday;
     private Set<Integer> friends = new HashSet<>();  // Забьем Id друзей
 
-    public void addIdUserFriend (Integer id) {
+    public void addIdUserFriend(Integer id) {
         friends.add(id);
     }
 

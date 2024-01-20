@@ -7,7 +7,7 @@ public class ErrorResponse {
     String error;
     String description;
 
-    public ErrorResponse(String message,String s) {
+    public ErrorResponse(String message, String s) {
         this.description = message;
         this.error = s;
     }

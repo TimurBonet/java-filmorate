@@ -38,7 +38,7 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User findUserById(Integer id) {
         log.info("Попытка найти пользователя по id");
-        if(!users.containsKey(id)){
+        if (!users.containsKey(id)) {
             throw new UserNotFoundException("нет пользователя с id - " + id);
         }
         log.info("Найден пользователь User : {}", users.get(id));
@@ -88,7 +88,7 @@ public class InMemoryUserStorage implements UserStorage {
             user.setName(user.getLogin());
         }
 
-        if(!users.containsKey(user.getId())) {
+        if (!users.containsKey(user.getId())) {
             throw new UserNotFoundException("Отсутствует пользователь с id - " + user.getId());
         }
 

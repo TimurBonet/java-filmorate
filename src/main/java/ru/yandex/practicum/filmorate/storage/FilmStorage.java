@@ -12,11 +12,11 @@ import java.util.Map;
 
 public interface FilmStorage {
 
-    public List<Film> findAll() ;
+    public List<Film> findAll();
 
     public Film findFilmById(Integer id);
 
-    public Film createFilm(Film film) ;
+    public Film createFilm(Film film);
 
 
     public Film updateFilm(Film film);

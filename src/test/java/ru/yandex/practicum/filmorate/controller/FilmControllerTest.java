@@ -165,7 +165,7 @@ class FilmControllerTest {
     }
 
     @Test
-    void shouldShowTopFilms () {
+    void shouldShowTopFilms() {
         Film film = filmsList.get(0);
         filmController.createFilm(film);
         Film curFilm = filmController.findAll().get(0);
@@ -173,9 +173,8 @@ class FilmControllerTest {
         filmController.addLike(idFilm, 118);
         assertEquals(1, filmController.findFilmById(idFilm).getLikesList().size(), "Некорректное количество лайков");
         List<Film> filmsList = filmController.showTopTenFilms(1);
-        assertEquals(curFilm,filmsList.get(0), "Не совпадают фильмы");
+        assertEquals(curFilm, filmsList.get(0), "Не совпадают фильмы");
     }
-
 
 
 }

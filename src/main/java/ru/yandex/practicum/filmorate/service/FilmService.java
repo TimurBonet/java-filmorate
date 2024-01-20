@@ -43,7 +43,7 @@ public class FilmService {
         log.info("Попытка вывести ТОП-10 фильмов.");
 
         return inMemoryFilmStorage.findAll().stream()
-                .sorted((f1,f2) ->compare(f1,f2))
+                .sorted((f1, f2) -> compare(f1, f2))
                 .limit(count)
                 .collect(Collectors.toList());
     }

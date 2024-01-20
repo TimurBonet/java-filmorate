@@ -19,10 +19,10 @@ public class UserService {  // Заготовки
         this.inMemoryUserStorage = inMemoryUserStorage;
     }
 
-    public User addFriend (Integer id, Integer friendId){
+    public User addFriend(Integer id, Integer friendId) {
         User currentUser = inMemoryUserStorage.findUserById(id);
         User friend = inMemoryUserStorage.findUserById(friendId);
-        if (!currentUser.getFriends().contains(friendId)){
+        if (!currentUser.getFriends().contains(friendId)) {
             currentUser.addIdUserFriend(friendId);
             friend.addIdUserFriend(id);
         }
@@ -33,10 +33,10 @@ public class UserService {  // Заготовки
         return friend;
     }
 
-    public User deleteFriend (Integer id, Integer friendId){
+    public User deleteFriend(Integer id, Integer friendId) {
         User currentUser = inMemoryUserStorage.findUserById(id);
         User friend = inMemoryUserStorage.findUserById(id);
-        if (currentUser.getFriends().contains(friendId)){
+        if (currentUser.getFriends().contains(friendId)) {
             currentUser.removeIdUserFriend(friendId);
             friend.removeIdUserFriend(id);
         }
@@ -47,34 +47,33 @@ public class UserService {  // Заготовки
         return friend;
     }
 
-    public List<User> showCommonFriendList (Integer id, Integer otherId){
+    public List<User> showCommonFriendList(Integer id, Integer otherId) {
         User currentUser = inMemoryUserStorage.findUserById(id);
         User anitherUser = inMemoryUserStorage.findUserById(otherId);
         List<Integer> idList = new ArrayList<>();
-       // idList.addAll(currentUser.getFriends());
+        // idList.addAll(currentUser.getFriends());
         for (Integer i : currentUser.getFriends()) {
-            if(anitherUser.getFriends().contains(i)){
+            if (anitherUser.getFriends().contains(i)) {
                 idList.add(i);
             }
         }
         List<User> friendList = new ArrayList<>();
-        for (Integer i : idList){
+        for (Integer i : idList) {
             friendList.add(inMemoryUserStorage.findUserById(i));
         }
         return friendList;
     }
 
-    public List<User> showFriendList (Integer id){
+    public List<User> showFriendList(Integer id) {
         User currentUser = inMemoryUserStorage.findUserById(id);
         List<Integer> idList = new ArrayList<>();
         idList.addAll(currentUser.getFriends());
         List<User> allFriendList = new ArrayList<>();
-        for (Integer i : idList){
+        for (Integer i : idList) {
             allFriendList.add(inMemoryUserStorage.findUserById(i));
         }
         return allFriendList;
     }
-
 
 
 }

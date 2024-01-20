@@ -7,12 +7,12 @@ import java.util.List;
 
 public interface UserStorage {
 
-    public List<User> findAll() ;
+    public List<User> findAll();
 
     public User findUserById(Integer id);
 
     public User createUser(User user);
 
-    public User updateUser( User user);
+    public User updateUser(User user);
 
 }

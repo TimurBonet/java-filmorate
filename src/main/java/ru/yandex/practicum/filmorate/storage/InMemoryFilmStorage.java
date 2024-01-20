@@ -38,7 +38,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film findFilmById(Integer id) {
-        if(!films.containsKey(id)) {
+        if (!films.containsKey(id)) {
             throw new FilmNotFoundException("Отсутствует фильм с таким id - " + id);
         }
         log.info("Найден фильм с id - {}", id);
@@ -102,7 +102,8 @@ public class InMemoryFilmStorage implements FilmStorage {
             if (film != null || !film.getReleaseDate().isBefore(LocalDate.parse(EARLIEST_RELEASE_DATE))) {
                 return true;
             }
-        } else /*throw new InvalidFilmDataException("Incorrect data for update");*/ throw new FilmNotFoundException("Нет фильма для обновления");
+        } else /*throw new InvalidFilmDataException("Incorrect data for update");*/
+            throw new FilmNotFoundException("Нет фильма для обновления");
 
         return false;
     }
