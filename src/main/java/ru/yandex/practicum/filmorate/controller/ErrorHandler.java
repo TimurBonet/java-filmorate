@@ -38,40 +38,40 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleUnknownUserUpdate(final UnknownUserUpdateException e) {
-        return new ErrorResponse("Нет такого пользователя в списке, проверьте правильность запроса."
-                , e.getMessage()
+        return new ErrorResponse("Нет такого пользователя в списке, проверьте правильность запроса.",
+                e.getMessage()
         );
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleUserAlreadyExist(final UserAlreadyExistException e) {
-        return new ErrorResponse("Такой пользователь уже существует"
-                , e.getMessage()
+        return new ErrorResponse("Такой пользователь уже существует",
+                e.getMessage()
         );
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleUserNotFound(final UserNotFoundException e) {
-        return new ErrorResponse("Такой пользователь не найден"
-                , e.getMessage()
+        return new ErrorResponse("Такой пользователь не найден",
+                e.getMessage()
         );
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleFilmNotFound(final FilmNotFoundException e) {
-        return new ErrorResponse("Такой фильм не найден"
-                , e.getMessage()
+        return new ErrorResponse("Такой фильм не найден",
+                e.getMessage()
         );
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotLikedException(final NotLikedException e) {
-        return new ErrorResponse("Невозможно убрать лайк"
-                , e.getMessage()
+        return new ErrorResponse("Невозможно убрать лайк",
+                e.getMessage()
         );
     }
 
