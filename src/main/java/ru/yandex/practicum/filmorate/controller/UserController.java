@@ -4,84 +4,70 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.InvalidEmailException;
 import ru.yandex.practicum.filmorate.exceptions.UnknownUserUpdateException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+
 
 import javax.validation.Valid;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
 
 @RestController
 public class UserController {
-    @lombok.Generated
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UserController.class);
-    private Map<Integer, User> users = new HashMap<>();
-    private int userId = 0;
 
-    public int addId() {
-        return ++userId;
+    private final InMemoryUserStorage inMemoryUserStorage;
+    private final UserService userService;
+
+    public UserController(InMemoryUserStorage inMemoryUserStorage, UserService userService) {
+        this.inMemoryUserStorage = inMemoryUserStorage;
+        this.userService = userService;
     }
 
     @GetMapping("/users")
     public List<User> findAll() {
-        log.info("Попытка найти список пользователей, пользователей в списке: {}", users.size());
-        List<User> userList = new ArrayList<>();
-        for (User u : users.values()) {
-            userList.add(u);
-        }
-        return userList;
+
+        return inMemoryUserStorage.findAll();
+    }
+
+    @GetMapping("/users/{id}")
+    public User findById (@PathVariable("id") Integer id) {
+
+        return  inMemoryUserStorage.findUserById(id);
+    }
+
+    @GetMapping("/users/{id}/friends/common/{otherId}")
+    public List<User> showCommonFriendList (@PathVariable ("id") Integer id, @PathVariable("otherId") Integer otherId) {
+
+        return userService.showCommonFriendList(id, otherId);
+    }
+
+    @GetMapping("/users/{id}/friends")
+    public List<User> showFriendList (@PathVariable ("id") Integer id) {
+
+        return userService.showFriendList(id);
+    }
+
+    @PutMapping("/users/{id}/friends/{friendId}")
+    public User addFriend (@PathVariable("id") Integer id, @PathVariable("friendId") Integer friendId) {
+
+        return  userService.addFriend(id,friendId);
     }
 
     @PostMapping("/users")
     public User createUser(@Valid @RequestBody User user) throws InvalidEmailException {
-        log.info("Попытка добавить объект {}", user);
 
-        if (isCorrectForCreate(user)) {
-            user.setId(addId());
-            users.put(user.getId(), user);
-        } else {
-            throw new InvalidEmailException();
-        }
-        return user;
-    }
-
-    private boolean isCorrectForCreate(User user) {
-        if (user.getEmail().contains("@")
-                && !user.getEmail().contains(" ")
-                && !user.getBirthday().isAfter(LocalDate.now())) {
-            if (user.getName() == null) {
-                user.setName(user.getLogin());
-            }
-            return true;
-        }
-        return false;
+        return inMemoryUserStorage.createUser(user);
     }
 
     @PutMapping("/users")
     public User updateUser(@Valid @RequestBody User user) throws InvalidEmailException, UnknownUserUpdateException {
-        log.info("Попытка обновить объект {}", user);
 
-        if (isCorrectForUpdate(user)) {
-            users.put(user.getId(), user);
-        }
-        return user;
+        return inMemoryUserStorage.updateUser(user);
     }
 
-    private boolean isCorrectForUpdate(User user) {
+    @DeleteMapping("/users/{id}/friends/{friendId}")
+    public User deleteFriend (@PathVariable("id") Integer id, @PathVariable("friendId") Integer friendId){
 
-        if (user.getName().isEmpty() || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
-
-        if (user.getEmail().contains("@") && !user.getEmail().contains(" ") && !user.getBirthday().isAfter(LocalDate.now())) {
-            if (!users.containsKey(user.getId())) {
-                throw new UnknownUserUpdateException();
-            } else {
-                return true;
-            }
-        } else {
-            throw new InvalidEmailException();
-        }
+        return userService.deleteFriend(id,friendId);
     }
+
 }

@@ -7,6 +7,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exceptions.InvalidFilmDataException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,7 +20,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FilmControllerTest {
 
-    private FilmController filmController = new FilmController();
+    private final InMemoryFilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
+    private final FilmService filmService = new FilmService(inMemoryFilmStorage);
+    private FilmController filmController = new FilmController(inMemoryFilmStorage, filmService);
     List<Film> filmsList = new ArrayList<>();
     private static final LocalDate MIN_RELEASEDATE = LocalDate.parse("1895-12-28");
 
@@ -58,11 +63,18 @@ class FilmControllerTest {
         film5.setReleaseDate(LocalDate.of(1975, 07, 29));
         film5.setDuration(-1);
 
+        Film film6 = new Film();
+        film1.setName("Juws");
+        film1.setDescription("about juws");
+        film1.setReleaseDate(LocalDate.of(1977, 03, 22));
+        film1.setDuration(110);
+
         filmsList.add(film1);
         filmsList.add(film2);
         filmsList.add(film3);
         filmsList.add(film4);
         filmsList.add(film5);
+        filmsList.add(film6);
     }
 
     @Test
@@ -151,4 +163,19 @@ class FilmControllerTest {
         assertEquals(1, filmController.findAll().size(), "не совпадает количество фильмов");
         assertEquals(film2, filmController.findAll().get(0), "Не получилось обновить");
     }
+
+    @Test
+    void shouldShowTopFilms () {
+        Film film = filmsList.get(0);
+        filmController.createFilm(film);
+        Film curFilm = filmController.findAll().get(0);
+        Integer idFilm = curFilm.getId();
+        filmController.addLike(idFilm, 118);
+        assertEquals(1, filmController.findFilmById(idFilm).getLikesList().size(), "Некорректное количество лайков");
+        List<Film> filmsList = filmController.showTopTenFilms(1);
+        assertEquals(curFilm,filmsList.get(0), "Не совпадают фильмы");
+    }
+
+
+
 }
