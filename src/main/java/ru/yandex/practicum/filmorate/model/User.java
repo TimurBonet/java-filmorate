@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 import lombok.NonNull;
-import org.springframework.lang.Nullable;
+
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;

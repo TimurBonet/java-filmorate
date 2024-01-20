@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class UserService {  // Заготовки
+public class UserService {
 
     private final InMemoryUserStorage inMemoryUserStorage;
 
@@ -51,7 +51,6 @@ public class UserService {  // Заготовки
         User currentUser = inMemoryUserStorage.findUserById(id);
         User anitherUser = inMemoryUserStorage.findUserById(otherId);
         List<Integer> idList = new ArrayList<>();
-        // idList.addAll(currentUser.getFriends());
         for (Integer i : currentUser.getFriends()) {
             if (anitherUser.getFriends().contains(i)) {
                 idList.add(i);
