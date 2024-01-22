@@ -17,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 class UserControllerTest {
-    private InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
-    private UserService userService = new UserService(inMemoryUserStorage);
+    private final InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
+    private final UserService userService = new UserService(inMemoryUserStorage);
     private UserController userController = new UserController(userService);
     List<User> usersList = new ArrayList<>();
 
