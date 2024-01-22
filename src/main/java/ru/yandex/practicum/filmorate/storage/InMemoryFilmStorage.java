@@ -26,10 +26,6 @@ public class InMemoryFilmStorage implements FilmStorage {
     private static final int DESCRIPTION_MAX_LENGTH = 200;
     private static final String EARLIEST_RELEASE_DATE = "1895-12-28";
 
-    private Integer addId() {
-        return ++userId;
-    }
-
     @Override
     public List<Film> findAll() {
         log.info("Количество фильмов в фильмотеке {}", films.size());
@@ -46,7 +42,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film createFilm(Film film) throws InvalidFilmDataException, FilmAlreadyExistException {
+    public Film createFilm(Film film) {
         log.info("Попытка добавить объект {}", film);
 
         if (isCorrectForCreate(film)) {
@@ -55,6 +51,21 @@ public class InMemoryFilmStorage implements FilmStorage {
         }
 
         return film;
+    }
+
+    @Override
+    public Film updateFilm(Film film) {
+        log.info("Попытка обновить объект {}", film);
+
+        if (isCorrectForUpdate(film)) {
+            films.put(film.getId(), film);
+        }
+
+        return film;
+    }
+
+    private Integer addId() {
+        return ++userId;
     }
 
     private boolean isCorrectForCreate(Film film) {
@@ -86,17 +97,6 @@ public class InMemoryFilmStorage implements FilmStorage {
         return true;
     }
 
-    @Override
-    public Film updateFilm(Film film) throws FilmNotFoundException {
-        log.info("Попытка обновить объект {}", film);
-
-        if (isCorrectForUpdate(film)) {
-            films.put(film.getId(), film);
-        }
-
-        return film;
-    }
-
     private boolean isCorrectForUpdate(Film film) {
         if (films.containsKey(film.getId())) {
             if (film != null || !film.getReleaseDate().isBefore(LocalDate.parse(EARLIEST_RELEASE_DATE))) {
@@ -107,5 +107,6 @@ public class InMemoryFilmStorage implements FilmStorage {
 
         return false;
     }
+
 
 }

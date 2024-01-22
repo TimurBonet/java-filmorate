@@ -21,7 +21,7 @@ class FilmControllerTest {
 
     private final InMemoryFilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
     private final FilmService filmService = new FilmService(inMemoryFilmStorage);
-    private FilmController filmController = new FilmController(inMemoryFilmStorage, filmService);
+    private FilmController filmController = new FilmController(filmService);
     List<Film> filmsList = new ArrayList<>();
     private static final LocalDate MIN_RELEASEDATE = LocalDate.parse("1895-12-28");
 
@@ -170,7 +170,7 @@ class FilmControllerTest {
         Film curFilm = filmController.findAll().get(0);
         Integer idFilm = curFilm.getId();
         filmController.addLike(idFilm, 118);
-        assertEquals(1, filmController.findFilmById(idFilm).getLikesList().size(), "Некорректное количество лайков");
+        assertEquals(1, filmController.findFilmById(idFilm).getLikes().size(), "Некорректное количество лайков");
         List<Film> filmsList = filmController.showTopTenFilms(1);
         assertEquals(curFilm, filmsList.get(0), "Не совпадают фильмы");
     }

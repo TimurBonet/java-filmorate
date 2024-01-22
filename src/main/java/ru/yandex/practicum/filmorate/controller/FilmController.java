@@ -1,37 +1,29 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exceptions.FilmAlreadyExistException;
-import ru.yandex.practicum.filmorate.exceptions.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exceptions.InvalidFilmDataException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import javax.validation.Valid;
 import java.util.*;
 
 @RestController
+@RequiredArgsConstructor
 public class FilmController {
 
-    private final InMemoryFilmStorage inMemoryFilmStorage;
     private final FilmService filmService;
-
-    public FilmController(InMemoryFilmStorage inMemoryFilmStorage, FilmService filmService) {
-        this.inMemoryFilmStorage = inMemoryFilmStorage;
-        this.filmService = filmService;
-    }
 
     @GetMapping("/films")
     public List<Film> findAll() {
 
-        return inMemoryFilmStorage.findAll();
+        return filmService.findAll();
     }
 
     @GetMapping("/films/{id}")
     public Film findFilmById(@PathVariable("id") Integer id) {
 
-        return inMemoryFilmStorage.findFilmById(id);
+        return filmService.findFilmById(id);
     }
 
     @GetMapping("/films/popular")
@@ -41,9 +33,9 @@ public class FilmController {
     }
 
     @PostMapping("/films")
-    public Film createFilm(@Valid @RequestBody Film film) throws InvalidFilmDataException, FilmAlreadyExistException {
+    public Film createFilm(@Valid @RequestBody Film film) {
 
-        return inMemoryFilmStorage.createFilm(film);
+        return filmService.createFilm(film);
     }
 
     @PutMapping("/films/{id}/like/{userId}")
@@ -59,9 +51,9 @@ public class FilmController {
     }
 
     @PutMapping("/films")
-    public Film updateFilm(@Valid @RequestBody Film film) throws FilmNotFoundException {
+    public Film updateFilm(@Valid @RequestBody Film film) {
 
-        return inMemoryFilmStorage.updateFilm(film);
+        return filmService.updateFilm(film);
     }
 
 }

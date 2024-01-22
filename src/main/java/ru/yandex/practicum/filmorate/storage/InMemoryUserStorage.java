@@ -8,10 +8,10 @@ import ru.yandex.practicum.filmorate.exceptions.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class InMemoryUserStorage implements UserStorage {
@@ -20,18 +20,12 @@ public class InMemoryUserStorage implements UserStorage {
     private Map<Integer, User> users = new HashMap<>();
     private int userId = 0;
 
-    public int addId() {
-        return ++userId;
-    }
-
     @Override
     public List<User> findAll() {
         log.info("Попытка вывести список пользователей");
-        List<User> userList = new ArrayList<>();
-        for (User u : users.values()) {
-            userList.add(u);
-        }
-        log.info("Список найден, пользователей в списке: {}", users.size());
+        List<User> userList = users.values().stream()
+                .collect(Collectors.toList());
+        log.info("Список найден, пользователей в списке: {}", userList.size());
         return userList;
     }
 
@@ -46,7 +40,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User createUser(User user) throws InvalidEmailException {
+    public User createUser(User user) {
         log.info("Попытка добавить пользователя");
         User currentUser = user;
         if (isCorrectForCreate(user)) {
@@ -63,6 +57,20 @@ public class InMemoryUserStorage implements UserStorage {
         return currentUser;
     }
 
+    @Override
+    public User updateUser(User user) {
+        log.info("Попытка обновить пользователя");
+        if (isCorrectForUpdate(user)) {
+            users.put(user.getId(), user);
+        }
+        log.info("Пользователь {} обновлён", user);
+        return user;
+    }
+
+    private int addId() {
+        return ++userId;
+    }
+
     private boolean isCorrectForCreate(User user) {
         if (user.getEmail().contains("@")
                 && !user.getEmail().contains(" ")
@@ -70,16 +78,6 @@ public class InMemoryUserStorage implements UserStorage {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public User updateUser(User user) throws InvalidEmailException, UnknownUserUpdateException {
-        log.info("Попытка обновить пользователя");
-        if (isCorrectForUpdate(user)) {
-            users.put(user.getId(), user);
-        }
-        log.info("Пользователь {} обновлён", user);
-        return user;
     }
 
     private boolean isCorrectForUpdate(User user) {

@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,10 +15,11 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 class UserControllerTest {
     private InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
     private UserService userService = new UserService(inMemoryUserStorage);
-    private UserController userController = new UserController(inMemoryUserStorage, userService); //заглушка с конструктором хранилища
+    private UserController userController = new UserController(userService);
     List<User> usersList = new ArrayList<>();
 
 

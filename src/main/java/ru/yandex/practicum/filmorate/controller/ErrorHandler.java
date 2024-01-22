@@ -7,8 +7,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.yandex.practicum.filmorate.exceptions.*;
 import ru.yandex.practicum.filmorate.model.ErrorResponse;
 
+import java.time.LocalDate;
+
 @RestControllerAdvice
 public class ErrorHandler {
+
+    private final int maxChars = 200;
+    private final LocalDate minReleaseDate = LocalDate.of(1895, 12, 28);
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.FORBIDDEN)
@@ -21,8 +26,8 @@ public class ErrorHandler {
     public ErrorResponse handleInvalidFilmData(final InvalidFilmDataException e) {
         return new ErrorResponse("Некорректные данные фильма! \nПроверьте соответствие критериям: " +
                 "\n название не может быть пустым;\n" +
-                "максимальная длина описания — 200 символов;\n" +
-                "дата релиза — не раньше 28 декабря 1895 года;\n" +
+                "максимальная длина описания — " + maxChars + " символов;\n" +
+                "дата релиза — не раньше " + minReleaseDate + ";\n" +
                 "продолжительность фильма должна быть положительной.", e.getMessage());
     }
 

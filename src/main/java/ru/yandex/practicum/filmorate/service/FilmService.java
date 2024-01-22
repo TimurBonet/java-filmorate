@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.NotLikedException;
@@ -12,13 +13,10 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class FilmService {
 
     private final InMemoryFilmStorage inMemoryFilmStorage;
-
-    public FilmService(InMemoryFilmStorage inMemoryFilmStorage) {
-        this.inMemoryFilmStorage = inMemoryFilmStorage;
-    }
 
     public Film addLike(Integer filmId, Integer id) {
         log.info("Попытка добавить лайк.");
@@ -30,7 +28,7 @@ public class FilmService {
 
     public Film removeLike(Integer filmId, Integer id) {
         log.info("Попытка удалить лайк.");
-        if (!inMemoryFilmStorage.findFilmById(filmId).getLikesList().contains(id)) {
+        if (!inMemoryFilmStorage.findFilmById(filmId).getLikes().contains(id)) {
             throw new NotLikedException("Пользователь не лайкал фильм");
         }
         inMemoryFilmStorage.findFilmById(filmId).removeLikeFromUser(id);
@@ -49,9 +47,30 @@ public class FilmService {
     }
 
     private int compare(Film f1, Film f2) {
-        int result = f2.getLikesList().size() - (f1.getLikesList().size());
+        int result = f2.getLikes().size() - (f1.getLikes().size());
 
         return result;
     }
+
+    public List<Film> findAll() {
+
+        return inMemoryFilmStorage.findAll();
+    }
+
+    public Film findFilmById(Integer id) {
+
+        return inMemoryFilmStorage.findFilmById(id);
+    }
+
+    public Film createFilm(Film film) {
+
+        return inMemoryFilmStorage.createFilm(film);
+    }
+
+    public Film updateFilm(Film film) {
+
+        return inMemoryFilmStorage.updateFilm(film);
+    }
+
 
 }

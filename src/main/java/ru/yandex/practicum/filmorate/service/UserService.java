@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
@@ -8,16 +9,14 @@ import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserService {
 
     private final InMemoryUserStorage inMemoryUserStorage;
-
-    public UserService(InMemoryUserStorage inMemoryUserStorage) {
-        this.inMemoryUserStorage = inMemoryUserStorage;
-    }
 
     public User addFriend(Integer id, Integer friendId) {
         User currentUser = inMemoryUserStorage.findUserById(id);
@@ -49,14 +48,13 @@ public class UserService {
 
     public List<User> showCommonFriendList(Integer id, Integer otherId) {
         User currentUser = inMemoryUserStorage.findUserById(id);
-        User anitherUser = inMemoryUserStorage.findUserById(otherId);
-        List<Integer> idList = new ArrayList<>();
-        for (Integer i : currentUser.getFriends()) {
-            if (anitherUser.getFriends().contains(i)) {
-                idList.add(i);
-            }
-        }
+        User anotherUser = inMemoryUserStorage.findUserById(otherId);
         List<User> friendList = new ArrayList<>();
+
+        List<Integer> idList = currentUser.getFriends().stream()
+                .filter(i -> anotherUser.getFriends().contains(i))
+                .collect(Collectors.toList());
+
         for (Integer i : idList) {
             friendList.add(inMemoryUserStorage.findUserById(i));
         }
@@ -74,5 +72,23 @@ public class UserService {
         return allFriendList;
     }
 
+    public List<User> findAll() {
 
+        return inMemoryUserStorage.findAll();
+    }
+
+    public User findUserById(Integer id) {
+
+        return inMemoryUserStorage.findUserById(id);
+    }
+
+    public User createUser(User user) {
+
+        return inMemoryUserStorage.createUser(user);
+    }
+
+    public User updateUser(User user) {
+
+        return inMemoryUserStorage.updateUser(user);
+    }
 }

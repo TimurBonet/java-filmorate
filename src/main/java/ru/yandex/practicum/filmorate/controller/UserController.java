@@ -1,37 +1,29 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exceptions.InvalidEmailException;
-import ru.yandex.practicum.filmorate.exceptions.UnknownUserUpdateException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
-
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class UserController {
 
-    private final InMemoryUserStorage inMemoryUserStorage;
     private final UserService userService;
-
-    public UserController(InMemoryUserStorage inMemoryUserStorage, UserService userService) {
-        this.inMemoryUserStorage = inMemoryUserStorage;
-        this.userService = userService;
-    }
 
     @GetMapping("/users")
     public List<User> findAll() {
 
-        return inMemoryUserStorage.findAll();
+        return userService.findAll();
     }
 
     @GetMapping("/users/{id}")
     public User findById(@PathVariable("id") Integer id) {
 
-        return inMemoryUserStorage.findUserById(id);
+        return userService.findUserById(id);
     }
 
     @GetMapping("/users/{id}/friends/common/{otherId}")
@@ -53,15 +45,15 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public User createUser(@Valid @RequestBody User user) throws InvalidEmailException {
+    public User createUser(@Valid @RequestBody User user) {
 
-        return inMemoryUserStorage.createUser(user);
+        return userService.createUser(user);
     }
 
     @PutMapping("/users")
-    public User updateUser(@Valid @RequestBody User user) throws InvalidEmailException, UnknownUserUpdateException {
+    public User updateUser(@Valid @RequestBody User user) {
 
-        return inMemoryUserStorage.updateUser(user);
+        return userService.updateUser(user);
     }
 
     @DeleteMapping("/users/{id}/friends/{friendId}")

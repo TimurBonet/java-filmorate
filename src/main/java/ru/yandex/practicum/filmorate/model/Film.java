@@ -28,19 +28,18 @@ public class Film {
     private LocalDate releaseDate;
     @Min(1)
     private long duration;
-    private Set<Integer> likesList = new HashSet<>();
+    private Set<Integer> likes = new HashSet<>();
 
     public void addLikeFromUser(Integer id) {
-        likesList.add(id);
+        likes.add(id);
     }
 
     public void removeLikeFromUser(Integer id) {
-        likesList.remove(id);
+        likes.remove(id);
     }
 
     public void setTestValue(List<Integer> nums) {
-        likesList.addAll(nums);
+        likes.addAll(nums);
     }
-
 
 }
