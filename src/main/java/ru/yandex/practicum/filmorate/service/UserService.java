@@ -1,94 +1,26 @@
 package ru.yandex.practicum.filmorate.service;
 
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Service
-@Slf4j
-@RequiredArgsConstructor
-public class UserService {
+public interface UserService {
 
-    private final InMemoryUserStorage inMemoryUserStorage;
+    User getUserById (Integer userId);
 
-    public User addFriend(Integer id, Integer friendId) {
-        User currentUser = inMemoryUserStorage.findUserById(id);
-        User friend = inMemoryUserStorage.findUserById(friendId);
-        if (!currentUser.getFriends().contains(friendId)) {
-            currentUser.addIdUserFriend(friendId);
-            friend.addIdUserFriend(id);
-        }
-        inMemoryUserStorage.updateUser(currentUser);
-        inMemoryUserStorage.updateUser(friend);
-        log.info("Попытка добавить в друзья пользователя с id - {}. Во френдлисте пользователя - {}",
-                friendId, inMemoryUserStorage.findUserById(id).getFriends());
-        return friend;
-    }
+    List<User> getAllUsers();
 
-    public User deleteFriend(Integer id, Integer friendId) {
-        User currentUser = inMemoryUserStorage.findUserById(id);
-        User friend = inMemoryUserStorage.findUserById(id);
-        if (currentUser.getFriends().contains(friendId)) {
-            currentUser.removeIdUserFriend(friendId);
-            friend.removeIdUserFriend(id);
-        }
-        log.info("Попытка удалить пользователя id - {} из друзей. Пользователь id - {} друзья: {}",
-                friendId, id, inMemoryUserStorage.findUserById(id).getFriends());
-        log.info("Пользователь id - {} друзья: {}",
-                friendId, inMemoryUserStorage.findUserById(id).getFriends());
-        return friend;
-    }
+    User createUser(User user);
 
-    public List<User> showCommonFriendList(Integer id, Integer otherId) {
-        User currentUser = inMemoryUserStorage.findUserById(id);
-        User anotherUser = inMemoryUserStorage.findUserById(otherId);
-        List<User> friendList = new ArrayList<>();
+    User updateUser(User user);
 
-        List<Integer> idList = currentUser.getFriends().stream()
-                .filter(i -> anotherUser.getFriends().contains(i))
-                .collect(Collectors.toList());
+    void addFriend (Integer id, Integer friendId);
 
-        for (Integer i : idList) {
-            friendList.add(inMemoryUserStorage.findUserById(i));
-        }
-        return friendList;
-    }
+    void deleteFriend (Integer id, Integer friendId);
 
-    public List<User> showFriendList(Integer id) {
-        User currentUser = inMemoryUserStorage.findUserById(id);
-        List<Integer> idList = new ArrayList<>();
-        idList.addAll(currentUser.getFriends());
-        List<User> allFriendList = new ArrayList<>();
-        for (Integer i : idList) {
-            allFriendList.add(inMemoryUserStorage.findUserById(i));
-        }
-        return allFriendList;
-    }
+    List<User> getFriendList(Integer Id);
 
-    public List<User> findAll() {
+    List<User> getCommonFriendList(Integer id, Integer otherId);
 
-        return inMemoryUserStorage.findAll();
-    }
-
-    public User findUserById(Integer id) {
-
-        return inMemoryUserStorage.findUserById(id);
-    }
-
-    public User createUser(User user) {
-
-        return inMemoryUserStorage.createUser(user);
-    }
-
-    public User updateUser(User user) {
-
-        return inMemoryUserStorage.updateUser(user);
-    }
 }

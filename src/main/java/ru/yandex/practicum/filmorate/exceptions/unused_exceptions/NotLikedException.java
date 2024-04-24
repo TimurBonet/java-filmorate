@@ -1,3 +1,4 @@
+/*
 package ru.yandex.practicum.filmorate.exceptions;
 
 public class NotLikedException extends RuntimeException {
@@ -6,3 +7,4 @@ public class NotLikedException extends RuntimeException {
         super(message);
     }
 }
+*/
