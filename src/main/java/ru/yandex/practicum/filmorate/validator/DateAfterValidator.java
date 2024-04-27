@@ -4,7 +4,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDate;
 
-public class DateAfterValidator  implements ConstraintValidator<DateIsAfter, LocalDate> {
+public class DateAfterValidator implements ConstraintValidator<DateIsAfter, LocalDate> {
     private LocalDate dateToCompare;
 
     @Override

@@ -19,9 +19,9 @@ public interface UserStorage {
 
     boolean deleteFriend(Integer id, Integer friendId);
 
-    List<User> getFriendList (Integer id);
+    List<User> getFriendList(Integer id);
 
-    List<User> getCommonFriends (Integer id, Integer otherId);
+    List<User> getCommonFriends(Integer id, Integer otherId);
 
     boolean isExistById(Integer id);
 

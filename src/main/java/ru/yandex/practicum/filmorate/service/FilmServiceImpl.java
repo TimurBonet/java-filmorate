@@ -12,26 +12,26 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class FilmServiceImpl  implements FilmService {
+public class FilmServiceImpl implements FilmService {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
 
     @Autowired
-    public FilmServiceImpl (FilmStorage filmDAO, UserStorage userDAO) {
+    public FilmServiceImpl(FilmStorage filmDAO, UserStorage userDAO) {
         this.filmStorage = filmDAO;
         this.userStorage = userDAO;
     }
 
     @Override
     public void addLike(Integer filmId, Integer userId) {
-        isExist(filmId,userId);
-        filmStorage.addLike(filmId,userId);
+        isExist(filmId, userId);
+        filmStorage.addLike(filmId, userId);
     }
 
     @Override
     public boolean deleteLike(Integer filmId, Integer userId) {
         isExist(filmId, userId);
-        return filmStorage.deleteLike(filmId,userId);
+        return filmStorage.deleteLike(filmId, userId);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class FilmServiceImpl  implements FilmService {
     @Override
     public Film findFilmById(Long id) {
         return filmStorage.findFilmById(id)
-                .orElseThrow(() -> new NotFoundException("Фильм не найден",HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException("Фильм не найден", HttpStatus.NOT_FOUND));
     }
 
     @Override
@@ -66,17 +66,17 @@ public class FilmServiceImpl  implements FilmService {
         return filmStorage.deleteFilm(filmId);
     }
 
-    private void isExist (Integer filmId, Integer userId)  {
+    private void isExist(Integer filmId, Integer userId) {
         String filmNotFound = "Не найден фильм с ID: ";
         String userNotFound = "Не найден пользователь с ID: ";
         boolean isExistFilm = filmStorage.isExistById(filmId);
         boolean isExistUser = userStorage.isExistById(userId);
-        if (!isExistUser && ! isExistFilm) {
+        if (!isExistUser && !isExistFilm) {
             throw new NotFoundException(filmNotFound + filmId + " " + userNotFound + userId, HttpStatus.NOT_FOUND);
         } else if (!isExistUser) {
-            throw new NotFoundException(userNotFound + userId,HttpStatus.NOT_FOUND);
-        } else if(!isExistFilm) {
-            throw new NotFoundException(filmNotFound + filmId,HttpStatus.NOT_FOUND );
+            throw new NotFoundException(userNotFound + userId, HttpStatus.NOT_FOUND);
+        } else if (!isExistFilm) {
+            throw new NotFoundException(filmNotFound + filmId, HttpStatus.NOT_FOUND);
         }
 
     }

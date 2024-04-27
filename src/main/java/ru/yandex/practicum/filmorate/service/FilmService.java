@@ -15,7 +15,7 @@ public interface FilmService {
 
     Film updateFilm(Film film);
 
-    void addLike (Integer filmId, Integer userId);
+    void addLike(Integer filmId, Integer userId);
 
     boolean deleteFilm(Integer filmId);
 

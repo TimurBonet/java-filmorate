@@ -9,9 +9,9 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
-import java.util.*;
+import javax.validation.constraints.Positive;
+import java.util.List;
 
-import static org.springframework.http.HttpStatus.CREATED;
 
 @Slf4j
 @Validated
@@ -31,16 +31,16 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public Film findFilmById(@PathVariable("id") Long id) {
+    public Film findFilmById(@PathVariable Long id) {
         log.info("Запрос фильма по id : {}", id);
         return filmService.findFilmById(id);
     }
 
     @GetMapping("/popular")
-    public List<Film> getTopFilms(@RequestParam(value = "count", defaultValue = "10", required = false) Integer count) {
-        log.info("GET - запрос на получение топ {} фильмов.",count);
-        List<Film> topFilmsList = filmService.getTopFilms(count);
-        log.info("Получен топ {} список из {} фильмов.",count, topFilmsList.size());
+    public List<Film> getTopFilms(@Positive @RequestParam(/*value = "count", */defaultValue = "10"/*, required = false*/) String count) {
+        log.info("GET - запрос на получение топ {} фильмов.", Integer.valueOf(count));
+        List<Film> topFilmsList = filmService.getTopFilms(Integer.valueOf(count));
+        log.info("Получен топ {} список из {} фильмов.", count, topFilmsList.size());
         return topFilmsList;
     }
 
@@ -53,23 +53,24 @@ public class FilmController {
     }
 
     @PutMapping
+    @ResponseStatus(HttpStatus.OK)
     public Film updateFilm(@Valid @RequestBody Film film) {
         log.info("PUT-запрос на обновление данных фильма: {}", film);
         Film film1 = filmService.updateFilm(film);
-        log.info("Добавлен либо обновлён фильм: {}",film1);
+        log.info("Добавлен либо обновлён фильм: {}", film1);
         return film1;
     }
 
     @DeleteMapping("/id")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteFilm (@PathVariable Integer id) {
+    public void deleteFilm(@PathVariable Integer id) {
         log.info("DELETE-запрос на удаление фильма по id: {}", id);
         filmService.deleteFilm(id);
     }
 
     @PutMapping("/{id}/like/{userId}")
     public void addLike(@PathVariable("id") Integer id, @PathVariable("userId") Integer userId) {
-        log.info("PUT-запрос на добавление лайка, по id : {}",userId);
+        log.info("PUT-запрос на добавление лайка, по id : {}", userId);
         filmService.addLike(id, userId);
     }
 

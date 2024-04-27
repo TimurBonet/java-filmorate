@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.storage;
 
 import ru.yandex.practicum.filmorate.model.Film;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,9 +17,9 @@ public interface FilmStorage {
 
     Optional<Film> updateFilm(Film film);
 
-    boolean addLike (Integer filmId, Integer userId);
+    boolean addLike(Integer filmId, Integer userId);
 
-    boolean isExistById (Integer id);
+    boolean isExistById(Integer id);
 
     boolean deleteFilm(Integer filmId);
 

@@ -22,7 +22,7 @@ public class GenreDAOImpl implements GenreDAO {
         String sqlQuery = " SELECT * " +
                 "FROM GENRE " +
                 "WHERE GENRE_ID = ?";
-        List<Genre> genresList = jdbcTemplate.query(sqlQuery,this::mapRowToGenre,id);
+        List<Genre> genresList = jdbcTemplate.query(sqlQuery, this::mapRowToGenre, id);
         return genresList.stream().findFirst();
     }
 
@@ -37,11 +37,11 @@ public class GenreDAOImpl implements GenreDAO {
     @Override
     public boolean genreIsExistById(Long id) {
         String sqlQuery = "SELECT EXISTS(SELECT 1 FROM GENRE WHERE GENRE_ID = ?)";
-        return jdbcTemplate.queryForObject(sqlQuery,Boolean.class, id);
+        return jdbcTemplate.queryForObject(sqlQuery, Boolean.class, id);
     }
 
-    private Genre mapRowToGenre (ResultSet resultSet, int rowNum) throws SQLException {
-        return  Genre.builder()
+    private Genre mapRowToGenre(ResultSet resultSet, int rowNum) throws SQLException {
+        return Genre.builder()
                 .genreId(resultSet.getLong("GENRE_ID"))
                 .name(resultSet.getString("NAME"))
                 .build();

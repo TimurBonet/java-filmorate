@@ -1,22 +1,30 @@
 package ru.yandex.practicum.filmorate.exceptions;
 
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 
-@RestControllerAdvice
+@RestControllerAdvice(annotations = RestController.class)
 public class ErrorHandler {
 
     @ExceptionHandler
-    public ResponseEntity<Error> handleValidException(final ValidateException e){
+    public ResponseEntity<Error> handleValidException(final ValidateException e) {
         return new ResponseEntity<>(new Error("Ошибка: " + e.getMessage()), e.getStatus());
     }
 
     @ExceptionHandler
-    public ResponseEntity<Error> handleNotFoundException(final NotFoundException e){
+    public ResponseEntity<Error> handleNotFoundException(final NotFoundException e) {
         return new ResponseEntity<>(new Error("Ошибка: " + e.getMessage()), e.getStatus());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Error> handleNotFoundException(final MethodArgumentNotValidException e){
+        return new ResponseEntity<>(new Error("Ошибка: " + e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
 /*

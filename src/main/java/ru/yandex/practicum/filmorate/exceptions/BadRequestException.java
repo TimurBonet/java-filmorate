@@ -13,6 +13,6 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 @Builder
 public class BadRequestException extends RuntimeException {
-        private String message;
-        private HttpStatus status;
+    private String message;
+    private HttpStatus status;
 }

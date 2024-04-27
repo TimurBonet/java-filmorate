@@ -11,13 +11,15 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class MpaServiceImpl implements MpaService{
+public class MpaServiceImpl implements MpaService {
     private final MpaDAO mpaDAO;
 
     @Override
     public MPA findById(Long mpaId) {
         return mpaDAO.findById(mpaId)
-                .orElseThrow(() -> {throw new NotFoundException("Не найден id рейтинга", HttpStatus.NOT_FOUND);});
+                .orElseThrow(() -> {
+                    throw new NotFoundException("Не найден id рейтинга", HttpStatus.NOT_FOUND);
+                });
     }
 
     @Override

@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.model;
 import lombok.Builder;
 import lombok.Data;
 
+import lombok.NonNull;
 import lombok.ToString;
 import ru.yandex.practicum.filmorate.validator.DateIsAfter;
 
@@ -22,14 +23,14 @@ import java.util.Set;
 @Builder
 @ToString(callSuper = true)
 public class Film {
-    public static final String MIN_FILM_RELEASE_DATE= "1985-12-28";
-    @Min(1)
+    public static final String MIN_FILM_RELEASE_DATE = "1895-12-28";
+    ///@Min(1)
     private Long id;
     @NotBlank
     private String name;
-    @Size(min = 0, max = 200,message = "Максимум 200 символов")
+    @Size(min = 0, max = 200, message = "Максимум 200 символов")
     private String description;
-    @DateIsAfter(value = MIN_FILM_RELEASE_DATE, message = "Дата не может быть раньше 28.12.1985" )
+    @DateIsAfter(value = MIN_FILM_RELEASE_DATE, message = "Дата не может быть раньше 28.12.1895")
     private LocalDate releaseDate;
     @Min(1)
     private Long duration;

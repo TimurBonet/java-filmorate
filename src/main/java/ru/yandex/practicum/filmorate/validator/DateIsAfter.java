@@ -2,6 +2,9 @@ package ru.yandex.practicum.filmorate.validator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 import java.lang.annotation.*;
 
 @Target({ElementType.FIELD})
@@ -10,7 +13,10 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = DateAfterValidator.class)
 public @interface DateIsAfter {
     String message() default "Дата не может быть ранее {value}";
-    Class<?> [] groups() default {};
+
+    Class<?>[] groups() default {};
+
     String value() default "1970-01-01";
-    Class <? extends Payload>[] payLoad() default {};
+
+    Class<? extends Payload>[] payload() default {};
 }

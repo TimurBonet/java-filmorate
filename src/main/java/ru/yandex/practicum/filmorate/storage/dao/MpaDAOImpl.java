@@ -22,7 +22,7 @@ public class MpaDAOImpl implements MpaDAO {
         String sqlQuery = " SELECT * " +
                 "FROM MPA " +
                 "WHERE MPA_RATING_ID = ?";
-        List<MPA> mpaList = jdbcTemplate.query(sqlQuery,this::mapRowToMpa,id);
+        List<MPA> mpaList = jdbcTemplate.query(sqlQuery, this::mapRowToMpa, id);
         return mpaList.stream().findFirst();
     }
 
@@ -34,8 +34,8 @@ public class MpaDAOImpl implements MpaDAO {
         return jdbcTemplate.query(sqlQuery, this::mapRowToMpa);
     }
 
-    private MPA mapRowToMpa (ResultSet resultSet, int rowNum) throws SQLException {
-        return  MPA.builder()
+    private MPA mapRowToMpa(ResultSet resultSet, int rowNum) throws SQLException {
+        return MPA.builder()
                 .mpaRatingId(resultSet.getLong("MPA_RATING_ID"))
                 .name(resultSet.getString("NAME"))
                 .build();
