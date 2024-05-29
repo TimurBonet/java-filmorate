@@ -34,7 +34,7 @@ public class UserService {
 
     public User deleteFriend(Integer id, Integer friendId) {
         User currentUser = inMemoryUserStorage.findUserById(id);
-        User friend = inMemoryUserStorage.findUserById(id);
+        User friend = inMemoryUserStorage.findUserById(friendId);
         if (currentUser.getFriends().contains(friendId)) {
             currentUser.removeIdUserFriend(friendId);
             friend.removeIdUserFriend(id);
