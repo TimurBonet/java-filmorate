@@ -7,7 +7,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exceptions.InvalidFilmDataException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
@@ -26,9 +28,16 @@ class FilmControllerTest {
     private FilmController filmController = new FilmController(filmService);
     List<Film> filmsList = new ArrayList<>();
     private static final LocalDate MIN_RELEASEDATE = LocalDate.parse("1895-12-28");
+    private final UserService userService = new UserService(inMemoryUserStorage);
+    private UserController userController = new UserController(userService);
+    List<User> usersList = new ArrayList<>();
 
     @BeforeEach
     public void beforeEach() {
+        User user1 = new User("abc1@mail.ru", "cba", LocalDate.parse("1993-04-15"));
+        user1.setName("Kirill");
+        usersList.add(user1);
+
         Film film1 = new Film();
         film1.setName("Jaws");
         film1.setDescription("about sharks");
@@ -167,11 +176,12 @@ class FilmControllerTest {
 
     @Test
     void shouldShowTopFilms() {
+        userController.createUser(usersList.get(0));
         Film film = filmsList.get(0);
         filmController.createFilm(film);
         Film curFilm = filmController.findAll().get(0);
         Integer idFilm = curFilm.getId();
-        filmController.addLike(idFilm, 118);
+        filmController.addLike(idFilm, 1);
         assertEquals(1, filmController.findFilmById(idFilm).getLikes().size(), "Некорректное количество лайков");
         List<Film> filmsList = filmController.showTopTenFilms(1);
         assertEquals(curFilm, filmsList.get(0), "Не совпадают фильмы");
