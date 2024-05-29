@@ -23,7 +23,7 @@ public class FilmService {
 
     public Film addLike(Integer filmId, Integer id) {
         log.info("Попытка добавить лайк.");
-        if(inMemoryUserStorage.findUserById(id)==null){
+        if (inMemoryUserStorage.findUserById(id) == null) {
             throw new UserNotFoundException("Отсутствует пользователь с таким Id");
         }
         inMemoryFilmStorage.findFilmById(filmId).addLikeFromUser(id);
