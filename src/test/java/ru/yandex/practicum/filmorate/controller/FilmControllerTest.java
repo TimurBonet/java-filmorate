@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.exceptions.InvalidFilmDataException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,7 +21,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class FilmControllerTest {
 
     private final InMemoryFilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
-    private final FilmService filmService = new FilmService(inMemoryFilmStorage);
+    private final InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
+    private final FilmService filmService = new FilmService(inMemoryFilmStorage, inMemoryUserStorage);
     private FilmController filmController = new FilmController(filmService);
     List<Film> filmsList = new ArrayList<>();
     private static final LocalDate MIN_RELEASEDATE = LocalDate.parse("1895-12-28");
