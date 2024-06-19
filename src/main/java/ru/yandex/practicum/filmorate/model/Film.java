@@ -9,6 +9,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Film.
@@ -25,6 +28,18 @@ public class Film {
     private LocalDate releaseDate;
     @Min(1)
     private long duration;
+    private Set<Integer> likes = new HashSet<>();
 
+    public void addLikeFromUser(Integer id) {
+        likes.add(id);
+    }
+
+    public void removeLikeFromUser(Integer id) {
+        likes.remove(id);
+    }
+
+    public void setTestValue(List<Integer> nums) {
+        likes.addAll(nums);
+    }
 
 }
