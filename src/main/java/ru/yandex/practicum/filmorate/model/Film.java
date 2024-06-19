@@ -34,9 +34,9 @@ public class Film {
     private LocalDate releaseDate;
     @Min(1)
     private Long duration;
-    private Set<Integer> likes = new HashSet<>();
+    private Set<Integer> likes = new HashSet<>(); // пробуй rank
     private Set<Genre> genres;
-    private MPA mpaRating;
+    private MPA mpa;
 
     public void addLikeFromUser(Integer id) {
         likes.add(id);

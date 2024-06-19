@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class UserDbStorage implements UserStorage {
@@ -37,7 +39,8 @@ public class UserDbStorage implements UserStorage {
         if (userList.size() != 1) {
             throw new NotFoundException("Пользователь не найден", HttpStatus.NOT_FOUND);
         } else
-            return userList.get(0);
+            log.info("(UserDbStorage->findUserById)Пользователь найденный по id: {} -> {}", userList.get(0).getId(), userList.get(0));
+        return userList.get(0);
     }
 
     @Override
@@ -55,6 +58,7 @@ public class UserDbStorage implements UserStorage {
             return statement;
         }, keyHolder);
         user.setId(keyHolder.getKey().intValue());
+        log.info("(UserDbStorage->createUser)Created user: {}", user);
         return user;
     }
 
@@ -71,6 +75,7 @@ public class UserDbStorage implements UserStorage {
                 user.getId()
         );
         if (update > 0) {
+            log.info("(UserDbStorage->updateUser)Updated user: {}", user);
             return user;
         } else throw new NotFoundException("Пользоватеь не обновлён", HttpStatus.NOT_FOUND);
     }
@@ -86,6 +91,9 @@ public class UserDbStorage implements UserStorage {
                 "AND FRIEND_ID = ?) " +
                 "OR (USER_ID = ? " +
                 "AND FRIEND_ID = ?))";
+        log.info("(UserDbStorage->addFriend)Пользователь {}, имеет в друзьях {}, подтверждаем : {}", id, friendId, findUserById(id).getFriends());
+        log.info("(UserDbStorage->addFriend)Пользователь {}, имеет в друзьях {}, подтверждаем : {}", friendId, id, findUserById(friendId).getFriends());
+
         return jdbcTemplate.update(sqlQuery, id, friendId, id, friendId, friendId, id) > 0;
     }
 
@@ -103,6 +111,9 @@ public class UserDbStorage implements UserStorage {
                 "LEFT JOIN FRIENDS_LIST fl ON USERS.USER_ID = fl.FRIEND_ID " +
                 "WHERE fl.USER_ID = ?";
         List<User> userList = jdbcTemplate.query(sqlQuery, this::mapRowToUser, id);
+        log.info("(UserDbStorage->getFriendList)Френдлист пользователя id {} -> {}", id, userList.stream()
+                .sorted(Comparator.comparing(User::getId))
+                .collect(Collectors.toList()));
         return userList.stream()
                 .sorted(Comparator.comparing(User::getId))
                 .collect(Collectors.toList());
@@ -119,6 +130,7 @@ public class UserDbStorage implements UserStorage {
                 "LEFT JOIN USERS AS u ON u.USER_ID = fl.FRIEND_ID " +
                 "WHERE fl.USER_ID = ?)";
 
+        log.info("(UserDbStorage->getCommonFriends)  : {}", jdbcTemplate.query(sqlQuery, this::mapRowToUser, id, otherId));
         return jdbcTemplate.query(sqlQuery, this::mapRowToUser, id, otherId);
     }
 

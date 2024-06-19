@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,6 +12,7 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -49,10 +51,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addFriend(Integer userId, Integer friendId) {
+        log.info("(UserServiceImpl->addFriend)Добавляем в друзья пользователю {}, друга {}", userId, friendId);
         checkId(userId, friendId);
         boolean isAdded = userStorage.addFriend(userId, friendId);
+        boolean isAddedFriend = userStorage.addFriend(friendId, userId);
+        log.debug("(UserServiceImpl->addFriend)Добавлен ? : {}, {}", isAdded, isAddedFriend);
+        log.info(getFriendList(userId).toString());
+        log.info(getFriendList(friendId).toString());
         if (!isAdded) {
-            throw new BadRequestException("Пользователь уже добавлен в друзья", HttpStatus.BAD_REQUEST);
+            throw new BadRequestException("(UserServiceImpl->addFriend)Пользователь не добавлен в друзья", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -68,6 +75,7 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException("Не найден пользователь id: " + id, HttpStatus.NOT_FOUND);
         }
         return userStorage.getFriendList(id);
+
     }
 
     @Override
@@ -79,6 +87,8 @@ public class UserServiceImpl implements UserService {
     private void checkId(Integer id1, Integer id2) {
         User user1 = userStorage.findUserById(id1);
         User user2 = userStorage.findUserById(id2);
+        log.info("(UserServiceImpl->checkId)Юзер 1 найден : {}", user1.toString());
+        log.info("(UserServiceImpl->checkId)Юзер 2 найден : {}", user2.toString());
 
         if (user1 == null && user2 == null) {
             throw new NotFoundException("Пользователь id: " + id1 + ", пользователь id: " + id2 + " не найдены", HttpStatus.NOT_FOUND);

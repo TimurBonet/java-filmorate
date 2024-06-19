@@ -23,7 +23,7 @@ import java.util.*;
 
 
 @Slf4j
-@Repository//(value = "filmData")
+@Repository(value = "filmDB")
 @RequiredArgsConstructor
 public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
@@ -31,7 +31,7 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public List<Film> findAll() {
         String sqlQuery = "SELECT F.*, " +
-                "M.name as mpa_name, " +
+                "M.NAME as mpa_name, " +
                 "GROUP_CONCAT(G.GENRE_ID) as genre_id, " +
                 "GROUP_CONCAT(G.NAME) as genre_name " +
                 "FROM FILMS AS F " +
@@ -62,34 +62,43 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Film createFilm(Film film) {
 
-        if (film.getMpaRating().getMpaRatingId() > 5) {
+        if (film.getMpa().getId() > 5) {
             throw new NotFoundException("Некорректный возрастной рейтинг", HttpStatus.BAD_REQUEST);
         }
+        log.info("Запрос в DbStorage, создания фильма: {}", film);
+
         if (film.getGenres() != null) {
             for (Genre genre : film.getGenres()) {
-                if (genre.getGenreId() > 6) {
+                if (genre.getId() > 6) {
                     throw new NotFoundException("Некорректный жанр", HttpStatus.BAD_REQUEST);
                 }
             }
         }
-        String sqlQuery = "INSERT INTO FILMS (NAME, DESCRIPTION, RELEASEDATE, DURATION, MPA_RATING_ID) " +
-                "VALUES (?,?,?,?,?)";
+        String sqlQuery = "INSERT INTO FILMS (NAME, DESCRIPTION, releaseDate, DURATION, MPA_RATING_ID) " +
+                "VALUES (?, ?, ?, ?, ?)";
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
+
         try {
             jdbcTemplate.update(connection -> {
-                PreparedStatement statement = connection.prepareStatement(sqlQuery, new String[]{"FILM_ID"});
+                PreparedStatement statement = connection.prepareStatement(sqlQuery, new String[]{"film_id"});
                 statement.setString(1, film.getName());
                 statement.setString(2, film.getDescription());
                 statement.setDate(3, Date.valueOf(film.getReleaseDate()));
                 statement.setInt(4, film.getDuration().intValue());
-                statement.setInt(5, film.getMpaRating().getMpaRatingId().intValue());
+                statement.setLong(5, film.getMpa().getId());
+
                 return statement;
             }, keyHolder);
-            Long filmId = Objects.requireNonNull(keyHolder.getKey().longValue());
+
+            Long filmId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+            log.info("ATTENTION" + filmId);
             film.setId(filmId);
             updateFilmGenresList(film);
+
+            log.info("Добавлен фильм: {}", film);
             return film;
-        } catch (NotFoundException e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -97,11 +106,11 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Optional<Film> updateFilm(Film film) {
         String sqlQuery = "UPDATE FILMS SET " +
-                "NAME = ?, DESCRIPTION = ?, RELEASEDATE = ?, " +
+                "NAME = ?, DESCRIPTION = ?, releaseDate = ?, " +
                 "DURATION = ?, MPA_RATING_ID = ? " +
                 "WHERE FILM_ID = ?";
         int update = jdbcTemplate.update(sqlQuery, film.getName(), film.getDescription(), film.getReleaseDate(),
-                film.getDuration(), film.getMpaRating().getMpaRatingId(), film.getId());
+                film.getDuration(), film.getMpa().getId(), film.getId());
         if (update == 0) {
             throw new NotFoundException("Фильм не найден", HttpStatus.NOT_FOUND);
         }
@@ -166,24 +175,24 @@ public class FilmDbStorage implements FilmStorage {
                 .id(resultSet.getLong("FILM_ID"))
                 .name(resultSet.getString("NAME"))
                 .description(resultSet.getString("DESCRIPTION"))
-                .releaseDate(resultSet.getDate("RELEASEATE").toLocalDate())
+                .releaseDate(resultSet.getDate("releaseDate").toLocalDate())
                 .duration(resultSet.getLong("DURATION"))
-                .mpaRating(mapRowToMpa(resultSet))
+                .mpa(mapRowToMpa(resultSet)) // mpa(mapRowToMpa(MpaDAOImpl.findById(resultSet.getLong("mpa_rating_id")))
                 .genres(mapRowToGenre(resultSet))
                 .build();
     }
 
     private Set<Genre> mapRowToGenre(ResultSet resultSet) throws SQLException {
         Set<Genre> genreList = new HashSet<>();
-        String genreId = resultSet.getString("GENRE_ID");
-        String genreName = resultSet.getString("NAME");
+        String genreId = resultSet.getString("genre_id");
+        String genreName = resultSet.getString("genre_name");
         if (genreId != null) {
             String[] genreIds = genreId.split(",");
             String[] genreNames = genreName.split(",");
             for (int i = 0; i < genreIds.length; i++) {
                 if (i < genreNames.length) {
                     genreList.add(Genre.builder()
-                            .genreId(Long.parseLong(genreIds[i]))
+                            .id(Long.parseLong(genreIds[i]))
                             .name(genreNames[i])
                             .build());
                 }
@@ -194,8 +203,8 @@ public class FilmDbStorage implements FilmStorage {
 
     private MPA mapRowToMpa(ResultSet resultSet) throws SQLException {
         return MPA.builder()
-                .mpaRatingId(resultSet.getLong("MPA_RATING_ID"))
-                .name(resultSet.getString("NAME"))
+                .id(resultSet.getLong("MPA_RATING_ID"))
+                .name(resultSet.getString("mpa_name")) //NAME
                 .build();
     }
 
@@ -213,14 +222,14 @@ public class FilmDbStorage implements FilmStorage {
         deleteFilmGenresList(film.getId());
         String sqlQuery = "INSERT INTO FILM_GENRES (FILM_ID,GENRE_ID) " +
                 "VALUES(?,?)";
-        Set<Genre> genres = new TreeSet<>(Comparator.comparingLong(Genre::getGenreId));
+        Set<Genre> genres = new TreeSet<>(Comparator.comparingLong(Genre::getId));
         genres.addAll(film.getGenres());
         jdbcTemplate.batchUpdate(sqlQuery, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 Genre genre = new ArrayList<>(genres).get(i);
                 ps.setLong(1, film.getId());
-                ps.setLong(2, genre.getGenreId());
+                ps.setLong(2, genre.getId());
             }
 
             @Override

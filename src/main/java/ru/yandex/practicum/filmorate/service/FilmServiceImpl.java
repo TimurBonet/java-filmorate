@@ -1,5 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -11,16 +13,18 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class FilmServiceImpl implements FilmService {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
 
-    @Autowired
+    /*@Autowired
     public FilmServiceImpl(FilmStorage filmDAO, UserStorage userDAO) {
         this.filmStorage = filmDAO;
         this.userStorage = userDAO;
-    }
+    }*/
 
     @Override
     public void addLike(Integer filmId, Integer userId) {

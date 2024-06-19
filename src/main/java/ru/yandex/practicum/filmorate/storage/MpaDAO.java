@@ -10,4 +10,6 @@ public interface MpaDAO {
     Optional<MPA> findById(Long id);
 
     List<MPA> findAll();
+
+
 }

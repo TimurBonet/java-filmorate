@@ -4,8 +4,9 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class MPA {
-    private Long mpaRatingId;
+    private Long id;
     private String name;
+
 }

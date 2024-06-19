@@ -42,7 +42,7 @@ public class GenreDAOImpl implements GenreDAO {
 
     private Genre mapRowToGenre(ResultSet resultSet, int rowNum) throws SQLException {
         return Genre.builder()
-                .genreId(resultSet.getLong("GENRE_ID"))
+                .id(resultSet.getLong("GENRE_ID"))
                 .name(resultSet.getString("NAME"))
                 .build();
     }
