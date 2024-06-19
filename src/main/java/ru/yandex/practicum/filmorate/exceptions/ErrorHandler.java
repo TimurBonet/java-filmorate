@@ -23,9 +23,10 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<Error> handleNotFoundException(final MethodArgumentNotValidException e){
+    public ResponseEntity<Error> handleNotFoundException(final MethodArgumentNotValidException e) {
         return new ResponseEntity<>(new Error("Ошибка: " + e.getMessage()), HttpStatus.BAD_REQUEST);
     }
+}
 
 /*
 
@@ -103,5 +104,5 @@ public class ErrorHandler {
     }
 */
 
-}
+
 
