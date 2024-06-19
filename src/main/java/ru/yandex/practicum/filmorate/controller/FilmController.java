@@ -37,7 +37,7 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public List<Film> getTopFilms(@Positive @RequestParam(/*value = "count", */defaultValue = "10"/*, required = false*/) String count) {
+    public List<Film> getTopFilms(@Positive @RequestParam(defaultValue = "10") String count) {
         log.info("GET - запрос на получение топ {} фильмов.", Integer.valueOf(count));
         List<Film> topFilmsList = filmService.getTopFilms(Integer.valueOf(count));
         log.info("Получен топ {} список из {} фильмов.", count, topFilmsList.size());

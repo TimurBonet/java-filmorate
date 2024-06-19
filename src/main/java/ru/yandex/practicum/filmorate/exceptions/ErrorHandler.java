@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.exceptions;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,7 +26,6 @@ public class ErrorHandler {
         return new ResponseEntity<>(new Error("Ошибка: " + e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }
-
 /*
 
     @ExceptionHandler
