@@ -13,17 +13,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ErrorHandler {
 
     @ExceptionHandler
-    public ResponseEntity<Error> handleValidException(final ValidateException e) {
+    public ResponseEntity<Error> handleValidException(final ValidateException e){
         return new ResponseEntity<>(new Error("Ошибка: " + e.getMessage()), e.getStatus());
     }
 
     @ExceptionHandler
-    public ResponseEntity<Error> handleNotFoundException(final NotFoundException e) {
+    public ResponseEntity<Error> handleNotFoundException(final NotFoundException e){
         return new ResponseEntity<>(new Error("Ошибка: " + e.getMessage()), e.getStatus());
     }
 
     @ExceptionHandler
-    public ResponseEntity<Error> handleNotFoundException(final MethodArgumentNotValidException e) {
+    public ResponseEntity<Error> handleNotFoundException(final MethodArgumentNotValidException e){
         return new ResponseEntity<>(new Error("Ошибка: " + e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }
