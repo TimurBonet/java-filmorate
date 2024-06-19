@@ -20,7 +20,7 @@ public class User {
     public static final String LOGIN_REGEX = "^\\S*$";
     @Min(1)
     private Integer id;
-    @Email(regexp = EMAIL_REGEX, message = "некорректно введён email")
+    @Email(regexp = EMAIL_REGEX, message = "Некорректно введён email")
     private String email;
     @Pattern(regexp = LOGIN_REGEX, message = "Логин должен быть без пробелов")
     private String login;
