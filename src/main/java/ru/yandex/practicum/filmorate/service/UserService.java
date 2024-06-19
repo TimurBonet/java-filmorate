@@ -19,7 +19,7 @@ public interface UserService {
 
     void deleteFriend(Integer id, Integer friendId);
 
-    List<User> getFriendList(Integer Id);
+    List<User> getFriendList(Integer id);
 
     List<User> getCommonFriendList(Integer id, Integer otherId);
 
