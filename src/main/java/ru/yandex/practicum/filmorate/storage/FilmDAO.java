@@ -1,20 +1,25 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.storage;
+
 
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.List;
+import java.util.Optional;
 
 
-public interface FilmService {
+public interface FilmDAO {
+
     List<Film> findAll();
 
-    Film findFilmById(Long id);
+    Optional<Film> findFilmById(Long id);
 
     Film createFilm(Film film);
 
-    Film updateFilm(Film film);
+    Optional<Film> updateFilm(Film film);
 
-    void addLike(Integer filmId, Integer userId);
+    boolean addLike(Integer filmId, Integer userId);
+
+    boolean isExistById(Integer id);
 
     boolean deleteFilm(Integer filmId);
 
