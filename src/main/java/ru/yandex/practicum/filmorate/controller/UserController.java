@@ -30,15 +30,15 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable("id") Integer id) {
-        log.info("GET-запрос на получения пользователя по id : {}", id);
-        User user1 = userService.getUserById(id);
-        log.info("Получен пользователь : {}", user1);
-        return user1;
+    public User getUserById(@PathVariable("id") int id) {
+        User user = userService.getUserById(id);
+        log.info("GET-запрос на получения пользователя по id : {}. " +
+                "В результате получен пользователь id = {}, name = {}",id, user.getName());
+        return user;
     }
 
     @GetMapping("/{id}/friends/common/{friend_id}")
-    public List<User> getCommonFriendList(@PathVariable("id") Integer id, @PathVariable("friend_id") Integer otherId) {
+    public List<User> getCommonFriendList(@PathVariable("id") int id, @PathVariable("friend_id") int otherId) {
         return userService.getCommonFriendList(id, otherId);
     }
 
@@ -49,7 +49,7 @@ public class UserController {
 
     @PutMapping("/{id}/friends/{friend_id}")
     @ResponseStatus(HttpStatus.OK)
-    public void addFriend(@PathVariable("id") Integer id, @PathVariable("friend_id") Integer friendId) {
+    public void addFriend(@PathVariable("id") int id, @PathVariable("friend_id") int friendId) {
         userService.addFriend(id, friendId);
         log.info("Пользователю id: {}, добавлен друг id: {}", id, friendId);
     }
@@ -58,23 +58,23 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public User createUser(@Valid @RequestBody User user) {
         log.info("POST-запрос на создание пользователя {}", user.getName());
-        User user1 = userService.createUser(user);
-        log.info("Пользователь {} создан.", user1.getName());
-        return user1;
+        User createdUser = userService.createUser(user);
+        log.info("Пользователь {} создан.", createdUser.getName());
+        return createdUser;
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public User updateUser(@Valid @RequestBody User user) {
         log.info("PUT-запрос на обновление пользователя id = {}, name {}", user.getId(), user.getName());
-        User user1 = userService.updateUser(user);
-        log.info("Пользователь {} обновлён.", user1.getName());
-        return user1;
+        User updatedUser = userService.updateUser(user);
+        log.info("Пользователь {} обновлён.", updatedUser.getName());
+        return updatedUser;
     }
 
     @DeleteMapping("/{id}/friends/{friend_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteFriend(@PathVariable("id") Integer id, @PathVariable("friend_id") Integer friendId) {
+    public void deleteFriend(@PathVariable("id") int id, @PathVariable("friend_id") int friendId) {
         userService.deleteFriend(id, friendId);
         log.info("Пользователю {} удалён друг id: {}", id, friendId);
     }

@@ -21,7 +21,7 @@ public class MpaController {
     private final MpaService mpaService;
 
     @GetMapping("/{id}")
-    public MPA findById(@PathVariable("id") Long id) {
+    public MPA findById(@PathVariable("id") long id) {
         log.info("GET-запрос на получение рейтинга фильма по id : {}", id);
         return mpaService.findById(id);
     }

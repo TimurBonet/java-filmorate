@@ -19,16 +19,15 @@ public class GenreController {
     private final GenreService genreService;
 
     @GetMapping("/{id}")
-    public Genre findGenreById(@PathVariable Long id) {
+    public Genre findGenreById(@PathVariable long id) {
         log.info("GET-запрос на получение жанра фильма по id : {}", id);
         return genreService.findGenreById(id);
     }
 
     @GetMapping
     public List<Genre> findAllGenres() {
-        log.info("GET-запрос на получение списка всех жанров");
         List<Genre> genresList = genreService.findAllGenres();
-        log.info("Получен список всех жанров: {}", genresList.size());
+        log.info("GET-запрос на получение списка всех жанров, получен список всех жанров: {}", genresList.size());
         return genresList;
     }
 }

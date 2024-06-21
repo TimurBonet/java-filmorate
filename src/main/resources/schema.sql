@@ -1,16 +1,16 @@
-drop table if exists FILM_GENRES;
+drop table if exists film_genres;
 
 drop table if exists FILM_LIKES;
 
-drop table if exists FILMS;
+drop table if exists films;
 
-drop table if exists FRIENDS_LIST;
+drop table if exists friends_list;
 
-drop table if exists GENRE;
+drop table if exists genre;
 
-drop table if exists MPA;
+drop table if exists mpa;
 
-drop table if exists USERS;
+drop table if exists users;
 
 
 CREATE TABLE IF NOT EXISTS users
@@ -89,7 +89,7 @@ ALTER TABLE film_likes
 
 
 /*insert into mpa (mpa_rating_id, name)
-values (1, 'G'),
+values (1, 'g'),
        (2, 'PG'),
        (3, 'PG-13'),
        (4, 'R'),

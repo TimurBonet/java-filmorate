@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.FilmDAO;
+import ru.yandex.practicum.filmorate.storage.UserDAO;
 
 import java.util.List;
 
@@ -16,58 +16,58 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class FilmServiceImpl implements FilmService {
-    private final FilmStorage filmStorage;
-    private final UserStorage userStorage;
+    private final FilmDAO filmDAO;
+    private final UserDAO userDAO;
 
     @Override
     public void addLike(Integer filmId, Integer userId) {
         isExist(filmId, userId);
-        filmStorage.addLike(filmId, userId);
+        filmDAO.addLike(filmId, userId);
     }
 
     @Override
     public boolean deleteLike(Integer filmId, Integer userId) {
         isExist(filmId, userId);
-        return filmStorage.deleteLike(filmId, userId);
+        return filmDAO.deleteLike(filmId, userId);
     }
 
     @Override
     public List<Film> getTopFilms(Integer count) {
-        return filmStorage.getTopFilms(count);
+        return filmDAO.getTopFilms(count);
     }
 
     @Override
     public List<Film> findAll() {
-        return filmStorage.findAll();
+        return filmDAO.findAll();
     }
 
     @Override
     public Film findFilmById(Long id) {
-        return filmStorage.findFilmById(id)
+        return filmDAO.findFilmById(id)
                 .orElseThrow(() -> new NotFoundException("Фильм не найден", HttpStatus.NOT_FOUND));
     }
 
     @Override
     public Film createFilm(Film film) {
-        return filmStorage.createFilm(film);
+        return filmDAO.createFilm(film);
     }
 
     @Override
     public Film updateFilm(Film film) {
-        return filmStorage.updateFilm(film)
+        return filmDAO.updateFilm(film)
                 .orElseThrow(() -> new NotFoundException("Фильм не найден", HttpStatus.NOT_FOUND));
     }
 
     @Override
     public boolean deleteFilm(Integer filmId) {
-        return filmStorage.deleteFilm(filmId);
+        return filmDAO.deleteFilm(filmId);
     }
 
     private void isExist(Integer filmId, Integer userId) {
         String filmNotFound = "Не найден фильм с ID: ";
         String userNotFound = "Не найден пользователь с ID: ";
-        boolean isExistFilm = filmStorage.isExistById(filmId);
-        boolean isExistUser = userStorage.isExistById(userId);
+        boolean isExistFilm = filmDAO.isExistById(filmId);
+        boolean isExistUser = userDAO.isExistById(userId);
         if (!isExistUser && !isExistFilm) {
             throw new NotFoundException(filmNotFound + filmId + " " + userNotFound + userId, HttpStatus.NOT_FOUND);
         } else if (!isExistUser) {
