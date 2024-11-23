@@ -1,19 +1,32 @@
-package ru.yandex.practicum.filmorate.controller;
+package ru.yandex.practicum.filmorate.exceptions;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.yandex.practicum.filmorate.exceptions.*;
-import ru.yandex.practicum.filmorate.model.ErrorResponse;
 
-import java.time.LocalDate;
 
-@RestControllerAdvice
+@RestControllerAdvice(annotations = RestController.class)
 public class ErrorHandler {
 
-    private final int maxChars = 200;
-    private final LocalDate minReleaseDate = LocalDate.of(1895, 12, 28);
+    @ExceptionHandler
+    public ResponseEntity<Error> handleValidException(final ValidateException e) {
+        return new ResponseEntity<>(new Error("Ошибка: " + e.getMessage()), e.getStatus());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Error> handleNotFoundException(final NotFoundException e) {
+        return new ResponseEntity<>(new Error("Ошибка: " + e.getMessage()), e.getStatus());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Error> handleNotFoundException(final MethodArgumentNotValidException e) {
+        return new ResponseEntity<>(new Error("Ошибка: " + e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+}
+/*
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.FORBIDDEN)
@@ -80,5 +93,14 @@ public class ErrorHandler {
         );
     }
 
-}
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handle(final NotLikedException e) {
+        return new ErrorResponse("Невозможно убрать лайк",
+                e.getMessage()
+        );
+    }
+*/
+
+
 
